@@ -9,18 +9,22 @@ export async function getChatChannels() {
     return { success: false, message: "Unauthorized", data: [] };
   }
 
-  const orConditions: Array<Record<string, unknown>> = [{ type: "GENERAL" }];
-  if (user.course_id) {
-    orConditions.push({ course_id: user.course_id });
-  }
+  const isAdmin = user.role === "ADMIN";
 
   const channels = await prisma.chatChannel.findMany({
-    where: { OR: orConditions },
+    where: isAdmin
+      ? undefined // admins see every channel, no filtering
+      : {
+          OR: [
+            { type: "GENERAL" },
+            ...(user.course_id ? [{ course_id: user.course_id }] : []),
+          ],
+        },
     include: { course: { select: { title: true } } },
     orderBy: { id: "asc" },
   });
 
-  const data = channels.map((c:any) => ({
+  const data = channels.map((c) => ({
     id: c.id,
     type: c.type,
     course_id: c.course_id,
@@ -30,14 +34,18 @@ export async function getChatChannels() {
   return { success: true, data };
 }
 
-async function checkAccess(userCourseId: number | null, channelId: number) {
+async function checkAccess(
+  user: { role: string; course_id: number | null },
+  channelId: number
+) {
   const channel = await prisma.chatChannel.findUnique({
     where: { id: channelId },
   });
-
   if (!channel) return false;
 
-  return channel.type === "GENERAL" || channel.course_id === userCourseId;
+  if (user.role === "ADMIN") return true; // admins can read/post anywhere
+
+  return channel.type === "GENERAL" || channel.course_id === user.course_id;
 }
 
 export async function getChatMessages(channelId: number) {
@@ -46,7 +54,7 @@ export async function getChatMessages(channelId: number) {
     return { success: false, message: "Unauthorized", data: [] };
   }
 
-  const allowed = await checkAccess(user.course_id, channelId);
+  const allowed = await checkAccess(user, channelId);
   if (!allowed) {
     return { success: false, message: "Forbidden", data: [] };
   }
@@ -73,7 +81,7 @@ export async function sendChatMessage(channelId: number, content: string) {
     return { success: false, message: "Message cannot be empty" };
   }
 
-  const allowed = await checkAccess(user.course_id, channelId);
+  const allowed = await checkAccess(user, channelId);
   if (!allowed) {
     return { success: false, message: "Forbidden" };
   }

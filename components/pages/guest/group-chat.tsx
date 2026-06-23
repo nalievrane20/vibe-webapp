@@ -15,9 +15,14 @@ import {
 
 /* ----------------------------- Types (mirrors schema.prisma) ----------------------------- */
 
+// type AuthUser = {
+//   id: number;
+//   course_id: number | null;
+// };
 type AuthUser = {
   id: number;
   course_id: number | null;
+  role: "STUDENT" | "ADMIN";
 };
 
 type ChannelType = "GENERAL" | "COURSE";
@@ -55,7 +60,9 @@ export default function GroupChatPage({ user }: { user: AuthUser | null }) {
   const [loadingMessages, setLoadingMessages] = useState(false);
 
   const hasAccess = (channel: Channel) =>
-    channel.type === "GENERAL" || channel.course_id === user?.course_id;
+    user?.role === "ADMIN" ||
+    channel.type === "GENERAL" ||
+    channel.course_id === user?.course_id;
 
   // Fetch channels on mount
   useEffect(() => {
@@ -108,7 +115,8 @@ export default function GroupChatPage({ user }: { user: AuthUser | null }) {
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || !selectedChannel || !hasAccess(selectedChannel)) return;
+    if (!input.trim() || !selectedChannel || !hasAccess(selectedChannel))
+      return;
 
     const content = input;
     setInput("");
@@ -128,11 +136,12 @@ export default function GroupChatPage({ user }: { user: AuthUser | null }) {
   return (
     <section className="container mx-auto my-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 max-w-7xl mx-auto gap-6 py-10 px-4">
-
         {/* LEFT: CHANNEL LIST */}
         <div className="lg:col-span-4">
           <Card className="overflow-hidden py-0">
-            <CardHeader className="bg-black text-white p-4 rounded-none">Group</CardHeader>
+            <CardHeader className="bg-black text-white p-4 rounded-none">
+              Group
+            </CardHeader>
             <CardContent className="p-0">
               <div className="flex flex-col">
                 {loadingChannels && (
@@ -166,7 +175,7 @@ export default function GroupChatPage({ user }: { user: AuthUser | null }) {
                           unlocked &&
                           "bg-muted font-medium",
                         !unlocked &&
-                          "opacity-50 cursor-not-allowed hover:bg-transparent"
+                          "opacity-50 cursor-not-allowed hover:bg-transparent",
                       )}
                     >
                       <span>{channel.name}</span>
@@ -209,14 +218,14 @@ export default function GroupChatPage({ user }: { user: AuthUser | null }) {
                             key={msg.id}
                             className={cn(
                               "flex w-full",
-                              isMe ? "justify-end" : "justify-start"
+                              isMe ? "justify-end" : "justify-start",
                             )}
                           >
                             <div className="max-w-[70%]">
                               <p
                                 className={cn(
                                   "text-xs text-muted-foreground mb-1",
-                                  isMe ? "text-right" : "text-left"
+                                  isMe ? "text-right" : "text-left",
                                 )}
                               >
                                 {isMe
@@ -229,7 +238,7 @@ export default function GroupChatPage({ user }: { user: AuthUser | null }) {
                                   "px-3 py-2 rounded-2xl text-sm",
                                   isMe
                                     ? "bg-primary text-primary-foreground"
-                                    : "bg-muted"
+                                    : "bg-muted",
                                 )}
                               >
                                 {msg.content}
