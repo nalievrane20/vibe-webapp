@@ -12,6 +12,8 @@ import Image from "next/image";
 import News from "./news/page";
 import { getCurrentUser } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const user = await getCurrentUser();
   const { events, total } = await getEventsWithEngagement(user?.id, 1, 3);
