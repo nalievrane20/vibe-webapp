@@ -217,7 +217,7 @@ export async function getPopularEvents(limit = 6) {
     },
   });
 
-  const mapped = events.map((event) => ({
+  const mapped = events.map((event: any) => ({
     ...event,
     likeCount: event._count.likes,
     commentCount: event._count.comments,
