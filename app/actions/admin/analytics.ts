@@ -127,3 +127,50 @@ export async function getAnalyticsOverview() {
     registrationStatusCounts,
   };
 }
+
+export async function getAnalyticsExportData() {
+  const [courses, events, registrations, users, news] = await Promise.all([
+    prisma.course.findMany({
+      select: { title: true, _count: { select: { users: true } } },
+      orderBy: { title: "asc" },
+    }),
+    prisma.event.findMany({
+      select: {
+        title: true,
+        event_date: true,
+        fee: true,
+        _count: { select: { likes: true, comments: true, registrations: true } },
+      },
+      orderBy: { event_date: "desc" },
+    }),
+    prisma.eventRegistration.findMany({
+      select: {
+        amount: true,
+        status: true,
+        mode: true,
+        createdAt: true,
+        event: { select: { title: true } },
+        user: { select: { first_name: true, last_name: true, email: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.user.findMany({
+      select: {
+        student_id: true,
+        first_name: true,
+        last_name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        course: { select: { title: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.news.findMany({
+      select: { title: true, news_date: true, createdAt: true },
+      orderBy: { news_date: "desc" },
+    }),
+  ]);
+
+  return { courses, events, registrations, users, news };
+}

@@ -1,6 +1,8 @@
 import { getAnalyticsOverview } from "@/app/actions/admin/analytics";
 import AnalyticsCharts from "@/components/pages/admin/analytics/page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import {
   Users,
   CalendarDays,
@@ -42,7 +44,15 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <h1 className="text-2xl font-bold">Analytics</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Analytics</h1>
+        <Button asChild>
+          <a href="/api/admin/analytics/export" download>
+            <Download className="h-4 w-4 mr-2" />
+            Download Report
+          </a>
+        </Button>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {statCards.map(({ label, value, icon: Icon }) => (
