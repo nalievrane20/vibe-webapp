@@ -4,6 +4,8 @@ import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
+  Users,
+  Calendar,
   Bot,
   Command,
   Frame,
@@ -55,24 +57,24 @@ const data = {
     },
     {
       title: "Analytics",
-      url: "#",
-      icon: SquareTerminal,
+      url: "/admin/analytics",
+      icon: PieChart,
     },
     {
       title: "User",
       url: "/admin/users",
-      icon: SquareTerminal,
+      icon: Users,
     },
     {
       title: "Events",
       url: "/admin/events",
-      icon: SquareTerminal,
+      icon: Calendar,
     },
     {
       title: "News",
       url: "/admin/news",
       icon: SquareTerminal,
-    },    
+    },
     {
       title: "Models",
       url: "#",
