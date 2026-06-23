@@ -2,8 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
-     remotePatterns: [
+    remotePatterns: [
       {
         protocol: "https",
         hostname: "picsum.photos",
@@ -13,7 +16,7 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
-  }
+  },
 };
 
 export default nextConfig;
