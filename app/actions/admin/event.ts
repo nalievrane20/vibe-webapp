@@ -217,7 +217,7 @@ export async function getPopularEvents(limit = 6) {
     },
   });
 
-  const mapped = events.map((event: any) => ({
+  const mapped = events.map((event) => ({
     ...event,
     likeCount: event._count.likes,
     commentCount: event._count.comments,
@@ -225,6 +225,6 @@ export async function getPopularEvents(limit = 6) {
   }));
 
   return mapped
-    .sort((a, b) => b.engagementScore - a.engagementScore)
+    .sort((a: typeof mapped[number], b: typeof mapped[number]) => b.engagementScore - a.engagementScore)
     .slice(0, limit);
 }
