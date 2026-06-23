@@ -159,9 +159,6 @@ export async function getEventsWithEngagement(
         _count: {
           select: { likes: true, comments: true },
         },
-        likes: userId
-          ? { where: { user_id: userId }, select: { id: true } }
-          : false,
       },
       orderBy: { createdAt: "desc" },
       skip,
@@ -170,11 +167,11 @@ export async function getEventsWithEngagement(
     prisma.event.count(),
   ]);
 
-  const mapped = events.map((event: any) => ({
+  const mapped = events.map((event) => ({
     ...event,
     likeCount: event._count.likes,
     commentCount: event._count.comments,
-    likedByMe: userId ? event.likes.length > 0 : false,
+    likedByMe: event._count.likes > 0, // red for everyone if anyone liked it
   }));
 
   return {
@@ -192,9 +189,6 @@ export async function getEventByIdWithEngagement(id: number, userId?: number) {
       _count: {
         select: { likes: true, comments: true },
       },
-      likes: userId
-        ? { where: { user_id: userId }, select: { id: true } }
-        : false,
     },
   });
 
@@ -204,7 +198,7 @@ export async function getEventByIdWithEngagement(id: number, userId?: number) {
     ...event,
     likeCount: event._count.likes,
     commentCount: event._count.comments,
-    likedByMe: userId ? event.likes.length > 0 : false,
+    likedByMe: event._count.likes > 0, // red for everyone if anyone liked it
   };
 }
 
