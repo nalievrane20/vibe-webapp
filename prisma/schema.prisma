@@ -1,0 +1,201 @@
+// generator client {
+//   provider = "prisma-client"
+//   output   = "../generated/prisma"
+// }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // connection url is configured in prisma.config.ts
+}
+
+model User {
+  id          Int     @id @default(autoincrement())
+  student_id  String  @unique
+  first_name  String
+  middle_name String?
+  last_name   String
+  email       String  @unique
+
+  // Foreign Key
+  course_id Int?
+  course    Course? @relation(fields: [course_id], references: [id])
+
+  // Auth fields
+  password      String // store a hash, never plaintext
+  role          Role      @default(STUDENT)
+  emailVerified DateTime?
+
+  // Password reset flow
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+
+  likes             Like[]
+  comments          Comment[]
+  messages          Message[]
+  notificationReads NotificationRead[]
+  eventRegistrations  EventRegistration[] 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model Course {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+
+  // One course can have many users
+  users User[]
+
+  // One course can have many events
+  events Event[]
+
+  // One course has exactly one course-scoped chat channel
+  chatChannel ChatChannel?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  image       String?
+  fee         Float?
+
+  likes             Like[]
+  courses           Course[]
+  comments          Comment[]
+  notificationReads NotificationRead[]
+  registrations     EventRegistration[] 
+
+  event_date DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+
+  event_id Int
+  event    Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([event_id, user_id])
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  event_id Int
+  event    Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  image       String?
+
+  news_date DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ChannelType {
+  GENERAL
+  COURSE
+}
+
+model ChatChannel {
+  id   Int         @id @default(autoincrement())
+  type ChannelType
+
+  // null for the GENERAL channel, set (and unique) for COURSE channels
+  course_id Int?    @unique
+  course    Course? @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  channel_id Int
+  channel    ChatChannel @relation(fields: [channel_id], references: [id], onDelete: Cascade)
+
+  sender_id Int
+  sender    User @relation(fields: [sender_id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model NotificationRead {
+  id Int @id @default(autoincrement())
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  event_id Int
+  event    Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  readAt DateTime @default(now())
+
+  @@unique([user_id, event_id])
+}
+
+enum AttendanceMode {
+  ONLINE
+  ONSITE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+model EventRegistration {
+  id     Int            @id @default(autoincrement())
+  mode   AttendanceMode
+  amount Float          @default(0)
+  status PaymentStatus  @default(PENDING)
+
+  paymongo_checkout_id String?
+
+  event_id Int
+  event    Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([event_id, user_id])
+}
