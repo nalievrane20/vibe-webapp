@@ -3,7 +3,10 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { registerForEvent, getMyRegistration } from "@/app/actions/admin/registration";
+import {
+  registerForEvent,
+  getMyRegistration,
+} from "@/app/actions/admin/registration";
 import { AttendanceMode } from "@/generated/prisma/enums";
 
 export default function EventRegistration({
@@ -11,10 +14,12 @@ export default function EventRegistration({
   fee,
   isLoggedIn,
   existingStatus,
+  registrationId,
 }: {
   eventId: number;
   fee?: number;
   isLoggedIn: boolean;
+  registrationId?: number | null;
   existingStatus?: "PENDING" | "PAID" | "FAILED" | null;
 }) {
   const [mode, setMode] = useState<AttendanceMode>("ONSITE");
@@ -26,8 +31,20 @@ export default function EventRegistration({
 
   if (existingStatus === "PAID") {
     return (
-      <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
-        You're registered for this event.
+      <div className="space-y-3">
+        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
+          You're registered for this event.
+        </div>
+
+        {existingStatus === "PAID" && (
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => router.push(`/events/ticket/${eventId}`)} // ✅
+          >
+            🎟 View Ticket
+          </Button>
+        )}
       </div>
     );
   }
@@ -52,9 +69,7 @@ export default function EventRegistration({
     <div className="rounded-lg border border-gray-200 p-4">
       <h3 className="font-semibold text-gray-900">Join this event</h3>
       <p className="mt-1 text-sm text-gray-500">
-        {isFree
-          ? "This event is free."
-          : `Fee: ₱${fee?.toFixed(2)}`}
+        {isFree ? "This event is free." : `Fee: ₱${fee?.toFixed(2)}`}
       </p>
 
       <div className="mt-3 flex gap-3">
@@ -76,14 +91,18 @@ export default function EventRegistration({
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
-      <Button className="mt-4 w-full" onClick={handleSubmit} disabled={pending || !isLoggedIn}>
+      <Button
+        className="mt-4 w-full"
+        onClick={handleSubmit}
+        disabled={pending || !isLoggedIn}
+      >
         {!isLoggedIn
           ? "Log in to join"
           : pending
-          ? "Processing..."
-          : isFree
-          ? "Confirm Registration"
-          : "Continue to Payment"}
+            ? "Processing..."
+            : isFree
+              ? "Confirm Registration"
+              : "Continue to Payment"}
       </Button>
     </div>
   );

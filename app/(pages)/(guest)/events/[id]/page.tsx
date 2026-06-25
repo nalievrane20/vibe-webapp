@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import { getEventByIdWithEngagement } from "@/app/actions/admin/event";
 import { getCommentsByEvent } from "@/app/actions/admin/comment";
-import { registerForEvent, getMyRegistration } from "@/app/actions/admin/registration";
+import {
+  registerForEvent,
+  getMyRegistration,
+} from "@/app/actions/admin/registration";
 import { getSession } from "@/lib/auth";
 import EventLikeButton from "@/components/pages/guest/event-like-button";
 import EventComments from "@/components/pages/guest/event-comments";
@@ -17,6 +20,10 @@ export default async function EventDetailPage({
   const { id } = await params;
   const eventId = Number(id);
 
+  if (!eventId || isNaN(eventId)) {
+    throw new Error("Invalid event ID");
+  }
+
   if (Number.isNaN(eventId)) notFound();
 
   const session = await getSession();
@@ -27,12 +34,14 @@ export default async function EventDetailPage({
     getMyRegistration(eventId),
   ]);
 
+  console.log("MY REGISTRATION:", myRegistration);
+
   if (!event) notFound();
 
-    console.log("EVENT DEBUG:", {
-      id: event.id,
-      fee: event.fee,
-    });
+  console.log("EVENT DEBUG:", {
+    id: event.id,
+    fee: event.fee,
+  });
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8">
@@ -56,7 +65,9 @@ export default async function EventDetailPage({
       </p>
 
       {event.description && (
-        <p className="mt-4 whitespace-pre-line text-gray-700">{event.description}</p>
+        <p className="mt-4 whitespace-pre-line text-gray-700">
+          {event.description}
+        </p>
       )}
 
       <div className="mt-6 border-gray-100 pt-4 mb-20">
@@ -65,6 +76,7 @@ export default async function EventDetailPage({
           fee={event.fee ?? undefined}
           isLoggedIn={!!session?.userId}
           existingStatus={myRegistration?.status}
+          registrationId={myRegistration?.id}
         />
       </div>
 
