@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   const type = event.data?.attributes?.type;
   const checkoutId = event.data?.attributes?.data?.id;
 
-  // 👇 MOVE PRISMA IMPORT INSIDE HANDLER
+  // MOVE PRISMA IMPORT INSIDE HANDLER
   const { default: prisma } = await import("@/lib/prisma");
 
   if (checkoutId && type === "checkout_session.payment.paid") {
