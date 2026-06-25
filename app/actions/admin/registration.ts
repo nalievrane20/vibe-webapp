@@ -79,3 +79,55 @@ export async function getMyRegistration(eventId: number) {
     where: { event_id_user_id: { event_id: eventId, user_id: session.userId } },
   });
 }
+
+export async function getEventsRegistrationSummary() {
+  return prisma.event.findMany({
+    include: {
+      _count: {
+        select: {
+          registrations: true,
+        },
+      },
+    },
+    orderBy: {
+      event_date: "desc",
+    },
+  });
+}
+
+export async function getRegistrationEvents() {
+  return prisma.event.findMany({
+    include: {
+      _count: {
+        select: {
+          registrations: true,
+        },
+      },
+    },
+    orderBy: {
+      event_date: "desc",
+    },
+  });
+}
+
+export async function getEventRegistrants(eventId: number) {
+  return prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+    include: {
+      registrations: {
+        include: {
+          user: {
+            include: {
+              course: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+}

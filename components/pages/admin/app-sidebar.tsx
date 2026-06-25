@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
+ AudioWaveform ,
   BookOpen,
   Users,
   Calendar,
@@ -14,6 +14,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  SquarePen,
 } from "lucide-react";
 
 import {
@@ -69,6 +70,11 @@ const data = {
       title: "Events",
       url: "/admin/events",
       icon: Calendar,
+    },
+    {
+      title: "Registrations",
+      url: "/admin/registrations",
+      icon: SquarePen,
     },
     {
       title: "News",
