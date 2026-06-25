@@ -47,7 +47,7 @@ export default async function AnalyticsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Analytics</h1>
         <Button asChild>
-          <a href="/api/admin/analytics/export" download>
+          <a href="/admin/analytics/export" download>
             <Download className="h-4 w-4 mr-2" />
             Download Report
           </a>
