@@ -159,7 +159,7 @@ export default function UserProfile({
                             router.push(`/events/ticket/${reg.eventId}`)
                           }
                         >
-                          🎟 View Ticket
+                          View Ticket
                         </Button>
                       </div>
                     </td>

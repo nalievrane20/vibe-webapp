@@ -42,7 +42,7 @@ export default function EventRegistration({
             className="w-full"
             onClick={() => router.push(`/events/ticket/${eventId}`)} // ✅
           >
-            🎟 View Ticket
+            View Ticket
           </Button>
         )}
       </div>
