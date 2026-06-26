@@ -87,7 +87,7 @@ export default async function PaymentSuccessPage({
             eventTitle={registration.event.title}
             studentName={`${registration.user.first_name} ${registration.user.last_name}`}
             mode={registration.mode}
-            status={registration.status}
+            status={registration.amount === 0 ? "FREE" : registration.status}
             eventDate={registration.event.event_date.toISOString()}
           />
         </div>

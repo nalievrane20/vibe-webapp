@@ -63,7 +63,7 @@ export default async function Profile() {
           eventDescription: reg.event.description ?? "",
           eventImage: reg.event.image ?? null,
           mode: reg.mode,
-          status: reg.status,
+          status: reg.amount === 0 ? "FREE" : reg.status,
         }))}
       />
       <LatestPosts events={events} />

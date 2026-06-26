@@ -56,7 +56,8 @@ export default async function TicketPage({
             <strong>Mode:</strong> {registration.mode}
           </p>
           <p>
-            <strong>Status:</strong> {registration.status}
+            <strong>Status:</strong>{" "}
+            {registration.amount === 0 ? "FREE" : registration.status}
           </p>
           <p>
             <strong>Ticket #:</strong> {ticketNumber}
@@ -77,7 +78,7 @@ export default async function TicketPage({
           eventTitle={registration.event.title}
           studentName={`${registration.user.first_name} ${registration.user.last_name}`}
           mode={registration.mode}
-          status={registration.status}
+          status={registration.amount === 0 ? "FREE" : registration.status}
           eventDate={registration.event.event_date.toISOString()}
         />
       </div>
