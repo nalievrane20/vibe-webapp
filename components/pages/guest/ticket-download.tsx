@@ -79,7 +79,7 @@ export default function TicketDownload({
 
   return (
     <Button onClick={handleDownload} className="w-full mt-2">
-      ⬇ Download Ticket
+      Download Ticket
     </Button>
   );
 }
