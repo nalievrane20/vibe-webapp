@@ -225,12 +225,18 @@ export default function EventPost({
                       </div>
 
                       <Button
-                        className="px-8"
+                        className="px-8 max-[495px]:hidden"
                         onClick={() => router.push(`/events/${event.id}`)}
                       >
                         Join Event
                       </Button>
                     </div>
+                                         <Button
+                        className="px-8 mt-5 min-[494px]:hidden"
+                        onClick={() => router.push(`/events/${event.id}`)}
+                      >
+                        Join Event
+                      </Button>
                   </CardContent>
                 </Card>
               );
