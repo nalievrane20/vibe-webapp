@@ -54,10 +54,30 @@ export interface NavbarProps {
 /* -------------------------------------------------------------------------- */
 
 const defaultNavItems: NavItem[] = [
-  { id: "home", label: "Home", href: "/", icon: <Home className="h-6 w-6" strokeWidth={2} /> },
-  { id: "calendar", label: "Calendar", href: "/events", icon: <Calendar className="h-6 w-6" strokeWidth={2} /> },
-  { id: "feed", label: "Feed", href: "/news", icon: <Rss className="h-6 w-6" strokeWidth={2} /> },
-  { id: "community", label: "Community", href: "/group", icon: <Users className="h-6 w-6" strokeWidth={2} /> },
+  {
+    id: "home",
+    label: "Home",
+    href: "/",
+    icon: <Home className="h-6 w-6" strokeWidth={2} />,
+  },
+  {
+    id: "calendar",
+    label: "Calendar",
+    href: "/events",
+    icon: <Calendar className="h-6 w-6" strokeWidth={2} />,
+  },
+  {
+    id: "newspaper",
+    label: "News",
+    href: "/news",
+    icon: <Rss className="h-6 w-6" strokeWidth={2} />,
+  },
+  {
+    id: "community",
+    label: "Community",
+    href: "/group",
+    icon: <Users className="h-6 w-6" strokeWidth={2} />,
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -67,7 +87,7 @@ const defaultNavItems: NavItem[] = [
 function VibeLogo() {
   return (
     <div className="flex items-center gap-2.5 shrink-0">
-      <Image src={'/vibe-logo.png'} alt="logo" width={100} height={100}/>
+      <Image src={"/vibe-logo.png"} alt="logo" width={100} height={100} />
     </div>
   );
 }
@@ -76,14 +96,19 @@ function VibeLogo() {
 /*  Notifications menu (bell + dropdown list of events)                      */
 /* -------------------------------------------------------------------------- */
 
-function NotificationsMenu({ notifications }: { notifications: NotificationItem[] }) {
+function NotificationsMenu({
+  notifications,
+}: {
+  notifications: NotificationItem[];
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -109,7 +134,9 @@ function NotificationsMenu({ notifications }: { notifications: NotificationItem[
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={
-          unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"
+          unreadCount > 0
+            ? `Notifications, ${unreadCount} unread`
+            : "Notifications"
         }
         className="relative text-gray-700 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded-md p-1 hidden sm:inline-flex"
       >
@@ -140,7 +167,9 @@ function NotificationsMenu({ notifications }: { notifications: NotificationItem[
                 role="menuitem"
                 onClick={() => handleSelect(n)}
                 className={`block w-full px-3.5 py-2.5 text-left text-sm hover:bg-gray-50 ${
-                  n.isRead ? "text-gray-500" : "bg-blue-50/60 font-medium text-gray-900"
+                  n.isRead
+                    ? "text-gray-500"
+                    : "bg-blue-50/60 font-medium text-gray-900"
                 }`}
               >
                 <span className="block truncate">{n.title}</span>
@@ -160,13 +189,20 @@ function NotificationsMenu({ notifications }: { notifications: NotificationItem[
 /*  Account menu (avatar + chevron dropdown)                                 */
 /* -------------------------------------------------------------------------- */
 
-function AccountMenu({ user, onLogout }: { user: VibeUser; onLogout?: () => void }) {
+function AccountMenu({
+  user,
+  onLogout,
+}: {
+  user: VibeUser;
+  onLogout?: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -214,9 +250,15 @@ function AccountMenu({ user, onLogout }: { user: VibeUser; onLogout?: () => void
           className="absolute right-0 mt-3 w-52 origin-top-right rounded-xl border border-gray-100 bg-white py-1.5 shadow-lg shadow-gray-200/60 focus:outline-none"
         >
           <div className="px-3.5 py-2.5 border-b border-gray-100">
-            <p className="truncate text-sm font-semibold text-gray-900">{user.name}</p>
-            {user.email && <p className="truncate text-xs text-gray-500">{user.email}</p>}
-            {user.course && <p className="truncate text-xs text-gray-400">{user.course}</p>}
+            <p className="truncate text-sm font-semibold text-gray-900">
+              {user.name}
+            </p>
+            {user.email && (
+              <p className="truncate text-xs text-gray-500">{user.email}</p>
+            )}
+            {user.course && (
+              <p className="truncate text-xs text-gray-400">{user.course}</p>
+            )}
           </div>
           <Link
             href="/profile"
@@ -256,7 +298,6 @@ export default function Topbar({
   user,
   onLogout = () => logout(),
 }: NavbarProps) {
-
   const safeUser: VibeUser = user ?? {
     name: "Guest User",
     email: "",
@@ -288,7 +329,9 @@ export default function Topbar({
                   aria-current={isActive ? "page" : undefined}
                   title={item.label}
                   className={`flex items-center justify-center rounded-md p-1 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${
-                    isActive ? "text-blue-600" : "text-gray-700 hover:text-gray-900"
+                    isActive
+                      ? "text-blue-600"
+                      : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   <span className="sr-only">{item.label}</span>

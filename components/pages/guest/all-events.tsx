@@ -38,18 +38,21 @@ export default function AllEvents({
   events: any;
   user?: AllEventsUser;
 }) {
-
   const router = useRouter();
 
-  const [likeState, setLikeState] = useState <
+  const [likeState, setLikeState] = useState<
     Record<number, { liked: boolean; count: number }>
   >({});
 
-  const [commentCountState, setCommentCountState] = useState<Record<number, number>>({});
+  const [commentCountState, setCommentCountState] = useState<
+    Record<number, number>
+  >({});
 
   const [pending, startTransition] = useTransition();
 
-  const [commentDialogEventId, setCommentDialogEventId] = useState<number | null>(null);
+  const [commentDialogEventId, setCommentDialogEventId] = useState<
+    number | null
+  >(null);
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [commentInput, setCommentInput] = useState("");
   const [loadingComments, setLoadingComments] = useState(false);
@@ -60,7 +63,8 @@ export default function AllEvents({
   };
 
   const getCommentCount = (event: any) => {
-    if (commentCountState[event.id] !== undefined) return commentCountState[event.id];
+    if (commentCountState[event.id] !== undefined)
+      return commentCountState[event.id];
     return event.commentCount ?? 0;
   };
 
@@ -123,10 +127,7 @@ export default function AllEvents({
   return (
     <section className="w-full bg-muted/40 py-16">
       <div className="container mx-auto px-4">
-
-        <h2 className="text-center text-3xl font-bold mb-10">
-          ALL EVENTS
-        </h2>
+        <h2 className="text-center text-3xl font-bold mb-10">ALL EVENTS</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 max-w-6xl mx-auto gap-10 py-10 px-4">
           {events.map((event: any) => {
@@ -134,14 +135,15 @@ export default function AllEvents({
 
             return (
               <Card key={event.id} className="hover:shadow-lg transition">
-
                 <CardHeader>
                   <img
                     src={event.image}
                     alt={event.title}
                     className="rounded-md mb-3 h-40 w-full object-cover"
                   />
-                  <CardTitle className="text-xl line-clamp-1">{event.title}</CardTitle>
+                  <CardTitle className="text-xl line-clamp-1">
+                    {event.title}
+                  </CardTitle>
                 </CardHeader>
 
                 <CardContent>
@@ -166,7 +168,9 @@ export default function AllEvents({
                       onClick={() => handleLike(event)}
                       disabled={!user}
                       className={`flex items-center gap-1.5 text-sm ${
-                        likeInfo.liked ? "text-red-500" : "text-muted-foreground"
+                        likeInfo.liked
+                          ? "text-red-500"
+                          : "text-muted-foreground"
                       } hover:text-red-500 disabled:opacity-50`}
                     >
                       <Heart
@@ -191,7 +195,7 @@ export default function AllEvents({
                       className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
                     >
                       <Share2 className="h-4 w-4" />
-                      Share
+                      {/* Share */}
                     </button>
                   </div>
                 </CardContent>
@@ -199,7 +203,6 @@ export default function AllEvents({
             );
           })}
         </div>
-
       </div>
 
       {/* COMMENT DIALOG */}
@@ -215,11 +218,15 @@ export default function AllEvents({
           <div className="space-y-4">
             <div className="max-h-72 overflow-y-auto space-y-3">
               {loadingComments && (
-                <p className="text-sm text-muted-foreground">Loading comments...</p>
+                <p className="text-sm text-muted-foreground">
+                  Loading comments...
+                </p>
               )}
 
               {!loadingComments && comments.length === 0 && (
-                <p className="text-sm text-muted-foreground">No comments yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  No comments yet.
+                </p>
               )}
 
               {!loadingComments &&

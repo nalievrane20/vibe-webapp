@@ -5,11 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -65,15 +61,19 @@ export default function EventPost({
 
   const router = useRouter();
 
-  const [likeState, setLikeState] = useState <
+  const [likeState, setLikeState] = useState<
     Record<number, { liked: boolean; count: number }>
   >({});
 
-  const [commentCountState, setCommentCountState] = useState<Record<number, number>>({});
+  const [commentCountState, setCommentCountState] = useState<
+    Record<number, number>
+  >({});
 
   const [pending, startTransition] = useTransition();
 
-  const [commentDialogEventId, setCommentDialogEventId] = useState<number | null>(null);
+  const [commentDialogEventId, setCommentDialogEventId] = useState<
+    number | null
+  >(null);
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [commentInput, setCommentInput] = useState("");
   const [loadingComments, setLoadingComments] = useState(false);
@@ -84,7 +84,8 @@ export default function EventPost({
   };
 
   const getCommentCount = (event: any) => {
-    if (commentCountState[event.id] !== undefined) return commentCountState[event.id];
+    if (commentCountState[event.id] !== undefined)
+      return commentCountState[event.id];
     return event.commentCount ?? 0;
   };
 
@@ -145,7 +146,8 @@ export default function EventPost({
   };
 
   const goToPage = (targetPage: number) => {
-    if (targetPage < 1 || targetPage > totalPages || targetPage === page) return;
+    if (targetPage < 1 || targetPage > totalPages || targetPage === page)
+      return;
 
     setIsLoading(true);
     startTransition(async () => {
@@ -160,9 +162,7 @@ export default function EventPost({
   return (
     <div className="bg-muted/30 min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
-
         <div className="lg:col-span-8 space-y-6">
-
           <div className="grid md:grid-cols-1 gap-4">
             {events?.map((event: any) => {
               const likeInfo = getLikeInfo(event);
@@ -193,7 +193,9 @@ export default function EventPost({
                           onClick={() => handleLike(event)}
                           disabled={!user}
                           className={`flex items-center gap-1.5 text-sm ${
-                            likeInfo.liked ? "text-red-500" : "text-muted-foreground"
+                            likeInfo.liked
+                              ? "text-red-500"
+                              : "text-muted-foreground"
                           } hover:text-red-500 disabled:opacity-50`}
                         >
                           <Heart
@@ -222,11 +224,13 @@ export default function EventPost({
                         </button>
                       </div>
 
-                      <Button className="px-8" onClick={() => router.push(`/events/${event.id}`)}>
+                      <Button
+                        className="px-8"
+                        onClick={() => router.push(`/events/${event.id}`)}
+                      >
                         Join Event
                       </Button>
                     </div>
-
                   </CardContent>
                 </Card>
               );
@@ -262,7 +266,6 @@ export default function EventPost({
         </div>
 
         <div className="lg:col-span-4 space-y-6">
-
           <Card className="p-4 text-center">
             <Avatar className="mx-auto">
               <AvatarImage src="/images/user.jpg" />
@@ -332,7 +335,6 @@ export default function EventPost({
               <Badge>{newsCount}</Badge>
             </div>
           </Card>
-
         </div>
       </div>
 
@@ -348,11 +350,15 @@ export default function EventPost({
           <div className="space-y-4">
             <div className="max-h-72 overflow-y-auto space-y-3">
               {loadingComments && (
-                <p className="text-sm text-muted-foreground">Loading comments...</p>
+                <p className="text-sm text-muted-foreground">
+                  Loading comments...
+                </p>
               )}
 
               {!loadingComments && comments.length === 0 && (
-                <p className="text-sm text-muted-foreground">No comments yet.</p>
+                <p className="text-sm text-muted-foreground">
+                  No comments yet.
+                </p>
               )}
 
               {!loadingComments &&
