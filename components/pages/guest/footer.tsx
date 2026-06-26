@@ -47,7 +47,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 text-sm text-center">
           © 2026 Copyright:{" "}
           <Link
-            href="https://example.com"
+            href="/"
             className="text-blue-400 hover:underline"
             target="_blank"
           >
