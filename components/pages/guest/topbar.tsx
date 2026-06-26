@@ -74,7 +74,7 @@ const defaultNavItems: NavItem[] = [
   },
   {
     id: "community",
-    label: "Community",
+    label: "Social",
     href: "/group",
     icon: <Users className="h-6 w-6" strokeWidth={2} />,
   },
